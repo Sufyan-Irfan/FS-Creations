@@ -1,0 +1,10 @@
+<%- include('../partials/head',{title:'Catalog'}) %><div class="adm"><a href="/admin">Orders</a><a href="/admin/catalog"><b>Schools & products</b></a><a href="/admin/reviews">Reviews</a><a href="/admin/logout">Sign out</a></div>
+<h2>Add school</h2><form class="form" method="post" action="/admin/schools"><input name="name" placeholder="School name"><input name="city" placeholder="City"><button>Add school</button></form>
+<h2>Add product</h2><form class="form" method="post" action="/admin/products" enctype="multipart/form-data"><input name="name" placeholder="Item name (e.g. Shirt, White)"><input name="price" type="number" placeholder="Price (Rs.)">
+<select name="category_id"><% cats.forEach(c=>{ %><option value="<%= c.id %>"><%= c.name %></option><% }) %></select>
+<select name="school_id"><option value="">No school (general item)</option><% schools.forEach(s=>{ %><option value="<%= s.id %>"><%= s.name %></option><% }) %></select>
+<select name="gender"><% ['boys','girls','gents','ladies','all'].forEach(g=>{ %><option><%= g %></option><% }) %></select>
+<input name="sizes" placeholder="Sizes, comma separated (24,26,28 or S,M,L)"><textarea name="description" placeholder="Description"></textarea><input type="file" name="image" accept="image/jpeg,image/png,image/webp"><button>Add product</button></form>
+<h2>Products</h2><table><% products.forEach(p=>{ %><tr><td><%= p.name %><br><small><%= p.school||'General' %> · <%= p.gender %></small></td><td><%= pkr(p.price) %></td>
+<td><a href="/admin/products/<%= p.id %>/edit">Edit</a></td><td><form method="post" action="/admin/products/<%= p.id %>/delete" onsubmit="return confirm('Delete this product?')"><button class="ghost">Delete</button></form></td></tr><% }) %></table>
+<h2>Schools</h2><table><% schools.forEach(s=>{ %><tr><td><%= s.name %></td><td><form method="post" action="/admin/schools/<%= s.id %>/delete" onsubmit="return confirm('Delete school and all its items?')"><button class="ghost">Delete</button></form></td></tr><% }) %></table><%- include('../partials/foot') %>

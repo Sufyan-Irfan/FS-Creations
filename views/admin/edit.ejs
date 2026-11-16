@@ -1,0 +1,9 @@
+<%- include('../partials/head',{title:'Edit product'}) %><div class="adm"><a href="/admin">Orders</a><a href="/admin/catalog">Schools & products</a><a href="/admin/reviews">Reviews</a></div>
+<h1>Edit product</h1><form class="form" method="post" action="/admin/products/<%= p.id %>" enctype="multipart/form-data">
+<input name="name" value="<%= p.name %>"><input name="price" type="number" value="<%= p.price %>">
+<select name="category_id"><% cats.forEach(c=>{ %><option value="<%= c.id %>" <%= c.id===p.category_id?'selected':'' %>><%= c.name %></option><% }) %></select>
+<select name="school_id"><option value="">No school (general item)</option><% schools.forEach(s=>{ %><option value="<%= s.id %>" <%= s.id===p.school_id?'selected':'' %>><%= s.name %></option><% }) %></select>
+<select name="gender"><% ['boys','girls','gents','ladies','all'].forEach(g=>{ %><option <%= g===p.gender?'selected':'' %>><%= g %></option><% }) %></select>
+<input name="sizes" value="<%= p.sizes %>" placeholder="Sizes, comma separated"><textarea name="description"><%= p.description %></textarea>
+<% if(p.image){ %><img src="<%= p.image %>" alt="" width="120"><% } %><label>Replace image (optional) <input type="file" name="image" accept="image/jpeg,image/png,image/webp"></label>
+<button>Save changes</button></form><%- include('../partials/foot') %>

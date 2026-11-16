@@ -1,0 +1,24 @@
+const crypto=require('crypto');
+const hash=p=>{const s=crypto.randomBytes(16).toString('hex');return s+':'+crypto.scryptSync(p,s,64).toString('hex')};
+const ok=(p,h)=>{const[s,k]=h.split(':'),d=crypto.scryptSync(p,s,64),b=Buffer.from(k,'hex');return b.length===d.length&&crypto.timingSafeEqual(b,d)};
+module.exports=(app,q)=>{
+ const safe=n=>/^\/(?!\/)/.test(n||'')?n:'/account';
+ const start=(req,res,u,next)=>{const cart=req.session.cart;req.session.regenerate(()=>{req.session.cart=cart;req.session.user={id:u.id,name:u.name,email:u.email,phone:u.phone};res.redirect(safe(next))})};
+ const SU=(res,err,f)=>res.render('auth/signup',{err,f,title:'Create account'}),LI=(res,err,next)=>res.render('auth/login',{err,next,title:'Log in'});
+ app.get('/signup',(req,res)=>SU(res,null,{}));
+ app.post('/signup',async(req,res)=>{const f=req.body,e=(f.email||'').trim().toLowerCase(),n=(f.name||'').trim();
+  const bad=!n?'Please enter your name.':!/^\S+@\S+\.\S+$/.test(e)?'Enter a valid email address.':!/^[0-9+\- ]{10,15}$/.test(f.phone||'')?'Enter a valid phone number.':(f.password||'').length<8?'Password must be at least 8 characters.':f.password!==f.confirm?'Passwords do not match.':null;
+  if(bad)return SU(res,bad,f);
+  if((await q('SELECT id FROM customers WHERE email=?',[e])).length)return SU(res,'An account with this email already exists.',f);
+  const r=await q('INSERT INTO customers(name,email,phone,password) VALUES(?,?,?,?)',[n,e,f.phone,hash(f.password)]);
+  start(req,res,{id:r.insertId,name:n,email:e,phone:f.phone},req.query.next)});
+ app.get('/login',(req,res)=>LI(res,null,req.query.next||''));
+ app.post('/login',async(req,res)=>{const s=req.session,b=req.body;if(s.fails>=5&&Date.now()-s.failAt>=60000)s.fails=0;
+  if(s.fails>=5)return LI(res,'Too many attempts. Please try again in a minute.',b.next);
+  const[u]=await q('SELECT * FROM customers WHERE email=?',[(b.email||'').trim().toLowerCase()]);
+  if(u&&ok(b.password||'',u.password))return start(req,res,u,b.next);
+  s.fails=(s.fails||0)+1;s.failAt=Date.now();LI(res,'Incorrect email or password.',b.next)});
+ app.get('/logout',(req,res)=>{const cart=req.session.cart;req.session.regenerate(()=>{req.session.cart=cart;res.redirect('/')})});
+ app.get('/account',async(req,res)=>{if(!req.session.user)return res.redirect('/login?next=/account');
+  res.render('auth/account',{title:'My orders',orders:await q('SELECT * FROM orders WHERE user_id=? ORDER BY id DESC',[req.session.user.id])})});
+};

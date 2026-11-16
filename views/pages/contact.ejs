@@ -1,0 +1,2 @@
+<%- include('../partials/head') %><h1 class="h2 mb-4">Contact us</h1><div class="row g-4"><div class="col-md-5"><div class="card card-body"><p><b>Address</b><br><%= addr %></p><% if(phone){ %><p><b>Phone</b><br><%= phone %></p><% } %><a class="btn btn-success" href="https://wa.me/<%= wa %>">Chat on WhatsApp</a></div></div>
+<div class="col-md-7"><div class="ratio ratio-4x3"><iframe title="Map" loading="lazy" src="https://www.google.com/maps?q=<%= encodeURIComponent(addr) %>&output=embed"></iframe></div></div></div><%- include('../partials/foot') %>

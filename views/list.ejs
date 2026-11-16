@@ -1,0 +1,4 @@
+<%- include('partials/head') %><nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/">Home</a></li><li class="breadcrumb-item active"><%= title %></li></ol></nav>
+<h1 class="h2 mb-4"><%= title %></h1><% if(!items.length){ %><div class="alert alert-light border">No items yet. Please check back soon or message us on WhatsApp.</div><% } %>
+<% const gs=group?[...new Set(items.map(i=>i.gender))]:[null]; gs.forEach(g=>{ %><% if(g){ %><h2 class="sec h5"><%= {boys:'Boys',girls:'Girls',all:'Everyone',gents:'Gents',ladies:'Ladies'}[g] %></h2><% } %>
+<div class="row g-3 mb-4"><% items.filter(i=>!g||i.gender===g).forEach(p=>{ %><%- include('partials/card',{p}) %><% }) %></div><% }) %><%- include('partials/foot') %>

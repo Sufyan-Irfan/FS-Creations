@@ -1,0 +1,5 @@
+<%- include('../partials/head',{title:'Reviews'}) %><div class="adm"><a href="/admin">Orders</a><a href="/admin/catalog">Schools & products</a><a href="/admin/reviews"><b>Reviews</b></a><a href="/admin/logout">Sign out</a></div>
+<h1>Reviews</h1><% if(!rows.length){ %><p>No reviews yet.</p><% } %><table><% rows.forEach(r=>{ %><tr><td><%= r.product %><br><small><%= r.created.toLocaleDateString('en-GB') %></small></td>
+<td><b><%= r.name %></b> <%= '★'.repeat(r.rating) %><br><%= r.comment %></td><td><span class="pill"><%= r.approved?'Published':'Waiting' %></span></td>
+<td><% if(!r.approved){ %><form method="post" action="/admin/reviews/<%= r.id %>/approve"><button class="ghost">Publish</button></form><% } %>
+<form method="post" action="/admin/reviews/<%= r.id %>/delete" onsubmit="return confirm('Delete this review?')"><button class="ghost">Delete</button></form></td></tr><% }) %></table><%- include('../partials/foot') %>

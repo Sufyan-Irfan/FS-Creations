@@ -1,0 +1,127 @@
+<%- include('partials/head',{wide:true}) %>
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7"><span class="chip"><i class="bi bi-stars"></i> New session uniforms are
+                        live</span>
+                    <h1>Your school uniform,<br><span>delivered home.</span></h1>
+                    <p class="lead">Pick your school, choose the items and sizes, and pay on delivery. It takes two
+                        minutes.</p>
+                    <div class="hsearch"><i class="bi bi-mortarboard"></i><input id="schoolSearch"
+                            placeholder="Search your school name" aria-label="Search schools"><a href="#schools"
+                            class="btn btn-yellow">Find</a></div>
+                    <div class="hero-meta">
+                        <div><b>Cash on delivery</b><small>Pay when it arrives</small></div>
+                        <div><b>Stitched to fit</b><small>Sizes for every student</small></div>
+                        <div><b>WhatsApp support</b><small>Quick, friendly replies</small></div>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="steps">
+                        <div class="steps-h"><small>Simple process</small>
+                            <h2>How it works</h2></div>
+                        <div class="st"><span><i class="bi bi-mortarboard"></i></span>
+                            <div><small>Step 1</small><b>Choose your school</b></div>
+                        </div>
+                        <div class="st"><span><i class="bi bi-rulers"></i></span>
+                            <div><small>Step 2</small><b>Pick items and sizes</b></div>
+                        </div>
+                        <div class="st"><span><i class="bi bi-truck"></i></span>
+                            <div><small>Step 3</small><b>We deliver to your door</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feats">
+        <div class="container">
+            <div class="row g-3">
+                <div class="col-6 col-lg-3">
+                    <div class="ft-i"><i class="bi bi-truck"></i>
+                        <div><b>Free delivery</b><small>Over <%= pkr(freeOver) %></small></div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="ft-i"><i class="bi bi-cash-coin"></i>
+                        <div><b>Cash on delivery</b><small>Or bank, JazzCash, Easypaisa</small></div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="ft-i"><i class="bi bi-patch-check"></i>
+                        <div><b>Quality fabric</b><small>Stitched to last</small></div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="ft-i"><i class="bi bi-whatsapp"></i>
+                        <div><b>WhatsApp support</b><small>Quick replies</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="band band-blue" id="schools">
+        <div class="container">
+            <div class="sec-h">
+                <h2>Shop by school</h2>
+                <p>Select your school to see its exact uniform.</p>
+            </div>
+            <div class="row g-3">
+                <% schools.forEach(function(s){ %>
+                    <%- include('partials/school', {s: s}) %>
+                        <% }) %>
+            </div>
+        </div>
+    </section>
+
+    <section class="band">
+        <div class="container">
+            <div class="sec-h">
+                <h2>Shop by category</h2>
+                <p>Uniforms, suits, bags and more.</p>
+            </div>
+            <div class="row g-3">
+                <% cats.forEach(function(c){ %>
+                    <div class="col-6 col-md-4 col-lg"><a class="ct" href="/category/<%= c.slug %>"><i
+                                class="bi <%= ico(c.slug) %>"></i><b>
+                                <%= c.name %>
+                            </b></a></div>
+                    <% }) %>
+            </div>
+        </div>
+    </section>
+
+    <section class="band band-cream">
+        <div class="container">
+            <div class="sec-h">
+                <h2>Popular items</h2>
+                <p>What parents order most.</p>
+            </div>
+            <div class="row g-4">
+                <% items.forEach(function(p){ %>
+                    <%- include('partials/card', {p: p}) %>
+                        <% }) %>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="mb-1">Can&rsquo;t find your school?</h2>
+                <p class="mb-0">Message us on WhatsApp and we will arrange it.</p>
+            </div>
+            <a class="btn btn-success btn-lg" href="https://wa.me/<%= wa %>"><i class="bi bi-whatsapp"></i> Chat on
+                WhatsApp</a>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('schoolSearch').addEventListener('input', function () {
+            var v = this.value.toLowerCase();
+            document.querySelectorAll('.sch').forEach(function (e) { e.hidden = e.dataset.n.indexOf(v) < 0; });
+        });
+    </script>
+    <%- include('partials/foot') %>

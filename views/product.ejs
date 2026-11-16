@@ -1,0 +1,78 @@
+<%- include('partials/head',{title:p.name}) %>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">
+                <%= p.name %>
+            </li>
+        </ol>
+    </nav>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="ratio ratio-1x1 ph rounded-3 overflow-hidden"><% if (p.image) { %><img src="<%= p.image %>" alt="<%= p.name %>" class="object-fit-cover"><% } else { %><i class="bi bi-bag"></i><% } %></div>
+        </div>
+        <div class="col-md-6">
+            <h1 class="h2">
+                <%= p.name %>
+            </h1>
+            <p class="h3 pr my-3">
+                <%= pkr(p.price) %>
+            </p>
+            <p class="text-muted">
+                <%= p.description||'' %>
+            </p>
+            <form method="post" action="/cart/add" class="card card-body"><input type="hidden" name="id"
+                    value="<%= p.id %>">
+                <% if(p.sizes){ %><label class="form-label fw-semibold">Size</label><select name="size"
+                        class="form-select mb-3" required>
+                        <% p.sizes.split(',').forEach(s=>{ %><option>
+                                <%= s %>
+                            </option>
+                            <% }) %>
+                    </select>
+                    <% } %>
+                        <label class="form-label fw-semibold">Quantity</label><input type="number" name="qty" value="1"
+                            min="1" class="form-control mb-3"><button class="btn btn-accent btn-lg">Add to cart</button>
+            </form>
+            <p class="small text-muted mt-3">Not sure about the size? See our <a href="/size-guide">size guide</a>.</p>
+        </div>
+    </div>
+    <section class="mt-5" id="reviews">
+        <h2 class="h4">Customer reviews<% if(reviews.length){ %> <small class="text-muted fs-6">
+                    <%= (reviews.reduce((a,r)=>a+r.rating,0)/reviews.length).toFixed(1) %> / 5 (<%= reviews.length %>)
+                </small>
+                <% } %>
+        </h2>
+        <% if(!reviews.length){ %>
+            <p class="text-muted">No reviews yet. Be the first to share your experience.</p>
+            <% } %>
+                <% reviews.forEach(r=>{ %><div class="border-bottom py-3"><b>
+                            <%= r.name %>
+                        </b> <span class="stars" aria-label="<%= r.rating %> out of 5">
+                            <%= '★' .repeat(r.rating)+'☆'.repeat(5-r.rating) %>
+                        </span>
+                        <p class="mb-0">
+                            <%= r.comment %>
+                        </p>
+                    </div>
+                    <% }) %>
+                        <% if(sent){ %>
+                            <div class="alert alert-success mt-3">Thank you. Your review will appear after we check it.
+                            </div>
+                            <% } %>
+                                <form class="card card-body mt-4 form" method="post"
+                                    action="/product/<%= p.id %>/review">
+                                    <h3 class="h6">Write a review</h3><input name="name" class="form-control"
+                                        placeholder="Your name" maxlength="60" required>
+                                    <select name="rating" class="form-select" aria-label="Rating">
+                                        <% [5,4,3,2,1].forEach(n=>{ %><option value="<%= n %>">
+                                                <%= n %> star<%= n>1?'s':'' %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                    <textarea name="comment" class="form-control" rows="3"
+                                        placeholder="Quality, fit, delivery" maxlength="500" required></textarea><input
+                                        name="website" class="hp" tabindex="-1" autocomplete="off"
+                                        aria-hidden="true"><button class="btn btn-dark">Submit review</button>
+                                </form>
+    </section><%- include('partials/foot') %>

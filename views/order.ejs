@@ -1,0 +1,5 @@
+<%- include('partials/head',{title:'Order placed'}) %><div class="card card-body mx-auto" style="max-width:640px"><div class="text-center"><div class="tick">&#10003;</div><h1 class="h3">Order #<%= o.id %> received</h1><p class="text-muted">Thank you, <%= o.name %>. We will call you shortly to confirm.</p></div>
+<table class="table"><% items.forEach(i=>{ %><tr><td><%= i.name %> <small class="text-muted"><%= i.size %></small></td><td>x <%= i.qty %></td><td class="text-end"><%= pkr(i.price*i.qty) %></td></tr><% }) %>
+<tr><td colspan="2">Delivery</td><td class="text-end"><%= o.delivery?pkr(o.delivery):'Free' %></td></tr><tr class="fw-bold"><td colspan="2">Total (<%= o.payment %>)</td><td class="text-end"><%= pkr(o.total) %></td></tr></table>
+<% if(o.payment!=='COD'){ %><% if(bank){ %><pre class="bank"><%= bank %></pre><% } %><p class="small">Send payment to the account above and share the screenshot on WhatsApp with your order number.</p><% } %>
+<a class="btn btn-success" href="https://wa.me/<%= wa %>?text=<%= encodeURIComponent('Hi, my order number is #'+o.id) %>">Confirm on WhatsApp</a></div><%- include('partials/foot') %>

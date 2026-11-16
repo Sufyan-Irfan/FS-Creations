@@ -1,0 +1,2 @@
+<%- include('../partials/head',{title:'Admin'}) %><h1>Admin login</h1><% if(err){ %><p class="err"><%= err %></p><% } %>
+<form class="form" method="post"><input type="password" name="password" placeholder="Password" autofocus><button>Sign in</button></form><%- include('../partials/foot') %>
